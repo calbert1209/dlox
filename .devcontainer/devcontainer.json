@@ -1,0 +1,25 @@
+{
+  "name": "Dart Dev Container",
+  "image": "dart:latest",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "upgradePackages": true,
+      "username": "vscode",
+      "userUid": "1001",
+      "userGid": "1001"
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "ppa": true,
+      "version": "system"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dart-code.dart-code"
+      ]
+    }
+  },
+  "postCreateCommand": "dart pub get",
+  "remoteUser": "vscode"
+}
