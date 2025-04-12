@@ -1,22 +1,30 @@
 import 'dart:io';
 import 'dart:convert';
 
-class Lox {
+abstract class ILox {
+  void error(int line, String message);
+  Future<void> runFile(String path);
+  void runPrompt();
+}
+
+class Lox implements ILox {
   bool hadError = false;
 
+  @override
   void error(int line, String message) {
-    report(line, "", message);
+    _report(line, "", message);
   }
 
-  void report(int line, String where, String message) {
+  void _report(int line, String where, String message) {
     print("[line $line] Error $where: $message");
     hadError = true;
   }
 
-  void runFile(String path) async {
+  @override
+  Future<void> runFile(String path) async {
     final file = File(path);
     final contents = await file.readAsString();
-    run(contents);
+    _run(contents);
 
     // Indicate an error in the exit code.
     if (hadError) {
@@ -35,13 +43,13 @@ class Lox {
       }
       // Process the input
       if (input.isNotEmpty) {
-        run(input);
+        _run(input);
         hadError = false;
       }
     }
   }
 
-  void run(String source) {
+  void _run(String source) {
     print("Would run: $source");
   }
 }
