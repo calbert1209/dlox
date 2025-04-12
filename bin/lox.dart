@@ -32,6 +32,7 @@ class Lox implements ILox {
     }
   }
 
+  @override
   void runPrompt() {
     print("repl mode");
 
