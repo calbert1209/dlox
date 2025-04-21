@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'token.dart';
 import 'token_type.dart' show TokenType;
 import 'lox.dart';
