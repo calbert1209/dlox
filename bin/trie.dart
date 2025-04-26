@@ -1,5 +1,3 @@
-import 'dart:math';
-
 class Node<T> {
   final Map<String, Node<T>> next = <String, Node<T>>{};
   T? value;
@@ -8,8 +6,6 @@ class Node<T> {
 }
 
 class Trie<T> {
-  static const R = 256;
-
   Node<T> _root = Node();
 
   // Retrieve /////////////////////////////
@@ -73,75 +69,3 @@ class Trie<T> {
     }
   }
 }
-
-void main(List<String> args) {
-  var trie = Trie<String>();
-  for (var value in [
-    "she",
-    "sells",
-    "sea",
-    "shells",
-    "by",
-    "the",
-    "sea",
-    "shore",
-    ";",
-  ]) {
-    trie.put(value, value.toUpperCase());
-  }
-
-  var sample = "shellszorg;fongbythe";
-  for (var i = 0; i < sample.length; i++) {
-    var limit = min(sample.length, i + 7);
-    var value = "";
-    for (var j = i; j < limit; j++) {
-      var substr = sample.substring(i, j);
-      var inTrie = trie.get(substr);
-      if (inTrie != null) {
-        value = inTrie;
-      }
-      print(substr);
-    }
-    print(value);
-  }
-}
-
-/*
-(function(){\n
-  print("hello world!");
-})();
-
-(         delimiter   OPEN_PAREN    single character delimiter
-f         null
-fu        null
-...
-function  keyword     FUNCTION      keyword match, followed by delimiter
-(         delimiter   OPEN_PAREN    single character delimiter
-)         delimiter   CLOSE_PAREN   single character delimiter
-{         delimiter   OPEN_BRACE    single character delimiter
-↳         delimiter   NEW_LINE      single character delimiter
-␠         delimiter   WHITE_SPACE   single character delimiter
-␠         delimiter   WHITE_SPACE   single character delimiter
-p         null
-pr        null
-...
-print     identifier  IDENTIFIER    no keyword match, followed by delimiter
-(         delimiter   OPEN_PAREN    single character delimiter
-"         null                      (signals start of string literal)
-"H        null
-...
-"Hello world!" literal  STRING      bound by quotation marks
-)         delimiter   CLOSE_PAREN   single character delimiter
-;         delimiter   SEMI_COLON    single character delimiter
-↳         delimiter   NEW_LINE      single character delimiter
-}         delimiter   CLOSE_BRACE    single character delimiter
-)         delimiter   CLOSE_PAREN   single character delimiter
-(         delimiter   OPEN_PAREN    single character delimiter
-)         delimiter   CLOSE_PAREN   single character delimiter
-;         delimiter   SEMI_COLON    single character delimiter
- */
-
-/*
-
-
- */
