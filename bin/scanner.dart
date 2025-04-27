@@ -40,7 +40,6 @@ class Scanner implements IScanner {
     return _current >= _source.length;
   }
 
-  /// Implements Nystrom's `peek()` method.
   /// Does not consume next character.
   String get _peek {
     if (_isAtEnd) return String.fromCharCode(0);
@@ -71,9 +70,8 @@ class Scanner implements IScanner {
     _tokens.add(Token(type, text, literal, _line));
   }
 
-  /// Implements Nystrom's `match()` method.
   /// Consumes the next character if it matches the expected value.
-  bool _nextIs(String expected) {
+  bool _match(String expected) {
     if (_isAtEnd) return false;
     if (_source[_current] != expected) return false;
 
@@ -83,8 +81,7 @@ class Scanner implements IScanner {
 
   bool _isDigit(c) => Char.digit.contains(c);
 
-  /// Implements Nystrom's `string()` method.
-  void _scanString() {
+  void _string() {
     while (_peek != Char.doubleQuotation && _isAtEnd) {
       if (_peek == Char.newLine) _line++;
       _advance();
@@ -104,15 +101,13 @@ class Scanner implements IScanner {
     _addToken(TokenType.string, value);
   }
 
-  /// Implements Nystrom's `peekNext()`.
   /// Returns the next character if available, without consuming it.
   String _peekNext() {
     if (_isAtEnd) return String.fromCharCode(0);
     return _source[_current + 1];
   }
 
-  /// Implements Nystrom's `number()` method.
-  void _scanNumber() {
+  void _number() {
     // capture initial digits.
     while (_isDigit(_peek)) {
       _advance();
@@ -156,15 +151,15 @@ class Scanner implements IScanner {
       case '*':
         _addToken(TokenType.star);
       case '!':
-        _addToken(_nextIs('=') ? TokenType.bangEqual : TokenType.bang);
+        _addToken(_match('=') ? TokenType.bangEqual : TokenType.bang);
       case '=':
-        _addToken(_nextIs('=') ? TokenType.equalEqual : TokenType.equal);
+        _addToken(_match('=') ? TokenType.equalEqual : TokenType.equal);
       case '<':
-        _addToken(_nextIs('=') ? TokenType.lessEqual : TokenType.less);
+        _addToken(_match('=') ? TokenType.lessEqual : TokenType.less);
       case '>':
-        _addToken(_nextIs('=') ? TokenType.greaterEqual : TokenType.greater);
+        _addToken(_match('=') ? TokenType.greaterEqual : TokenType.greater);
       case '/':
-        if (_nextIs('/')) {
+        if (_match('/')) {
           // Ignore all characters up to the next new-line char.
           while (_peek != '\n' && !_isAtEnd) {
             _advance();
@@ -174,7 +169,7 @@ class Scanner implements IScanner {
         }
 
       case Char.doubleQuotation:
-        _scanString();
+        _string();
 
       case Char.space:
       case Char.carriageReturn:
@@ -187,7 +182,7 @@ class Scanner implements IScanner {
 
       default:
         if (_isDigit(c)) {
-          _scanNumber();
+          _number();
         }
         _lox.error(
           _line,
