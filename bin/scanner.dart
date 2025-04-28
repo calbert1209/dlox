@@ -8,6 +8,7 @@ class Char {
   static const String tab = '\t';
   static const String newLine = '\n';
   static const String doubleQuotation = '"';
+  static const String quotation = "'";
   static const Set<String> digit = {
     "0",
     "1",
@@ -109,8 +110,9 @@ class Scanner implements IScanner {
 
   bool _isAlphaNumeric(c) => _isAlpha(c) || _isDigit(c);
 
-  void _string() {
-    while (_peek != Char.doubleQuotation && !_isAtEnd) {
+  void _string(String delimiter) {
+    print(_source[_current]);
+    while (_peek != delimiter && !_isAtEnd) {
       if (_peek == Char.newLine) _line++;
       _advance();
     }
@@ -208,7 +210,10 @@ class Scanner implements IScanner {
         }
 
       case Char.doubleQuotation:
-        _string();
+        _string(Char.doubleQuotation);
+
+      case Char.quotation:
+        _string(Char.quotation);
 
       case Char.space:
       case Char.carriageReturn:
