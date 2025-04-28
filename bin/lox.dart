@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'scanner.dart';
 
 abstract class ILox {
   void error(int line, String message);
@@ -51,6 +52,10 @@ class Lox implements ILox {
   }
 
   void _run(String source) {
-    print("Would run: $source");
+    var scanner = Scanner(source, this);
+    scanner.scanTokens();
+    for (var token in scanner.tokens) {
+      print(token.toString());
+    }
   }
 }
