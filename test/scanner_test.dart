@@ -116,7 +116,7 @@ void main() {
 
     expect(
       mockLox.errors,
-      contains('Line 1: Lexical error: unexpected character. 1:1'),
+      contains('Line 1: Lexical error: unexpected character. "@" 1:1'),
     );
   });
 
