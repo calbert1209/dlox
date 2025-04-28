@@ -119,4 +119,55 @@ void main() {
       contains('Line 1: Lexical error: unexpected character. 1:1'),
     );
   });
+
+  group('Scanner - Numbers and Identifiers', () {
+    test('scans integer numbers', () {
+      final source = '12345';
+      final mockLox = MockLox();
+      final scanner = Scanner(source, mockLox);
+
+      final tokens = scanner.scanTokens();
+
+      expect(tokens.map((t) => t.type), [TokenType.number, TokenType.eof]);
+      expect(tokens[0].literal, 12345); // Verify the literal value
+    });
+
+    test('scans floating-point numbers', () {
+      final source = '123.45';
+      final mockLox = MockLox();
+      final scanner = Scanner(source, mockLox);
+
+      final tokens = scanner.scanTokens();
+
+      expect(tokens.map((t) => t.type), [TokenType.number, TokenType.eof]);
+      expect(tokens[0].literal, 123.45); // Verify the literal value
+    });
+
+    test('scans identifiers', () {
+      final source = 'variableName';
+      final mockLox = MockLox();
+      final scanner = Scanner(source, mockLox);
+
+      final tokens = scanner.scanTokens();
+
+      expect(tokens.map((t) => t.type), [TokenType.identifier, TokenType.eof]);
+      expect(tokens[0].lexeme, 'variableName'); // Verify the identifier name
+    });
+
+    test('scans keywords as identifiers', () {
+      final source = 'if else while someIdentifier';
+      final mockLox = MockLox();
+      final scanner = Scanner(source, mockLox);
+
+      final tokens = scanner.scanTokens();
+
+      expect(tokens.map((t) => t.type), [
+        TokenType.ifKeyword,
+        TokenType.elseKeyword,
+        TokenType.whileKeyword,
+        TokenType.identifier,
+        TokenType.eof,
+      ]);
+    });
+  });
 }

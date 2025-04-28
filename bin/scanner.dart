@@ -20,7 +20,27 @@ class Char {
     "8",
     "9",
   };
+  static final alphaChar = RegExp(r'^[a-zA-Z_]+$');
 }
+
+Map<String, TokenType> _keywordTokenMap = {
+  "and": TokenType.and,
+  "class": TokenType.classKeyword,
+  "else": TokenType.elseKeyword,
+  "false": TokenType.falseKeyword,
+  "for": TokenType.forKeyword,
+  "fun": TokenType.fun,
+  "if": TokenType.ifKeyword,
+  "nil": TokenType.nil,
+  "or": TokenType.or,
+  "print": TokenType.print,
+  "return": TokenType.returnKeyword,
+  "super": TokenType.superKeyword,
+  "this": TokenType.thisKeyword,
+  "true": TokenType.trueKeyword,
+  "var": TokenType.varKeyword,
+  "while": TokenType.whileKeyword,
+};
 
 abstract class IScanner {
   List<Token> scanTokens();
@@ -35,6 +55,10 @@ class Scanner implements IScanner {
   int _line = 1;
 
   Scanner(this._source, this._lox);
+
+  List<Token> get tokens {
+    return _tokens;
+  }
 
   bool get _isAtEnd {
     return _current >= _source.length;
@@ -81,8 +105,12 @@ class Scanner implements IScanner {
 
   bool _isDigit(c) => Char.digit.contains(c);
 
+  bool _isAlpha(c) => Char.alphaChar.hasMatch(c);
+
+  bool _isAlphaNumeric(c) => _isAlpha(c) || _isDigit(c);
+
   void _string() {
-    while (_peek != Char.doubleQuotation && _isAtEnd) {
+    while (_peek != Char.doubleQuotation && !_isAtEnd) {
       if (_peek == Char.newLine) _line++;
       _advance();
     }
@@ -99,6 +127,17 @@ class Scanner implements IScanner {
     // TODO: To support escape sequences like `\n`, escape them here.
     var value = _source.substring(_start + 1, _current - 1);
     _addToken(TokenType.string, value);
+  }
+
+  void _identifier() {
+    while (_isAlphaNumeric(_peek)) {
+      _advance();
+    }
+
+    var text = _source.substring(_start, _current);
+    var tokenType = _keywordTokenMap[text] ?? TokenType.identifier;
+
+    _addToken(tokenType);
   }
 
   /// Returns the next character if available, without consuming it.
@@ -183,10 +222,15 @@ class Scanner implements IScanner {
       default:
         if (_isDigit(c)) {
           _number();
+          break;
+        }
+        if (_isAlpha(c)) {
+          _identifier();
+          break;
         }
         _lox.error(
           _line,
-          'Lexical error: unexpected character. $_line:$_current',
+          'Lexical error: unexpected character. "$c" $_line:$_current',
         );
     }
   }
