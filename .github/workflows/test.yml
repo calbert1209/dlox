@@ -1,0 +1,31 @@
+name: Dart Tests
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run Dart Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Dart environment
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      # Install dependencies
+      - name: Install dependencies
+        run: dart pub get
+
+      # Run tests
+      - name: Run tests
+        run: dart test
